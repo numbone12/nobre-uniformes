@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Nova Ordem – Nobre Uniformes</title>
+  <script type="module" src="./firebase.js"></script>
+  <script type="module" src="./ordem.js"></script>
+</head>
+<body style="font-family: Arial; background-color: #ffffff; padding: 20px;">
+
+  <h1>Nova Ordem de Serviço</h1>
+
+  <input id="cliente" type="text" placeholder="Nome do Cliente" style="display:block; margin:10px;" />
+  <input id="estampa" type="text" placeholder="Nome da Estampa" style="display:block; margin:10px;" />
+
+  <label><b>Tamanhos Masculinos/Femininos:</b></label><br/>
+  <input type="number" id="PP" placeholder="PP" style="width:60px;" />
+  <input type="number" id="P" placeholder="P" style="width:60px;" />
+  <input type="number" id="M" placeholder="M" style="width:60px;" />
+  <input type="number" id="G" placeholder="G" style="width:60px;" />
+  <input type="number" id="GG" placeholder="GG" style="width:60px;" />
+  <input type="number" id="XGG" placeholder="XGG" style="width:60px;" />
+  <input type="number" id="XXGG" placeholder="XXGG" style="width:60px;" /><br/><br/>
+
+  <label><b>Tamanhos Infantis:</b></label><br/>
+  <input type="number" id="2" placeholder="2" style="width:60px;" />
+  <input type="number" id="4" placeholder="4" style="width:60px;" />
+  <input type="number" id="6" placeholder="6" style="width:60px;" />
+  <input type="number" id="8" placeholder="8" style="width:60px;" />
+  <input type="number" id="10" placeholder="10" style="width:60px;" />
+  <input type="number" id="12" placeholder="12" style="width:60px;" /><br/><br/>
+
+  <label><b>Modelos:</b></label><br/>
+  <input type="checkbox" value="Raglan" id="raglan"> Raglan
+  <input type="checkbox" value="Malha PV" id="pv"> Malha PV
+  <input type="checkbox" value="Algodão" id="algodao"> Algodão
+  <input type="checkbox" value="Dry Fit" id="dry"> Dry Fit
+  <input type="checkbox" value="Padrão" id="padrao"> Padrão
+  <input type="checkbox" value="Regata" id="regata"> Regata
+  <input type="checkbox" value="Camisa Polo" id="polo"> Polo<br/><br/>
+
+  <textarea id="descricao" placeholder="Descrição da Arte" style="width:400px; height:80px;"></textarea><br/><br/>
+
+  <input type="number" id="valorUnitario" placeholder="Valor unitário da camisa (somente admin)" /><br/><br/>
+
+  <input type="file" id="imagem" /><br/><br/>
+
+  <button id="enviar">Salvar Ordem</button>
+  <p id="msg" style="color:green;"></p>
+
+</body>
+</html>

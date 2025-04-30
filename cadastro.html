@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Cadastro – Nobre Uniformes</title>
+  <script type="module" src="./firebase.js"></script>
+  <script type="module" src="./cadastro.js"></script>
+</head>
+<body style="font-family: Arial; background-color: #2365C7; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;">
+
+  <h1>Nobre Uniformes</h1>
+  <h2>Cadastro</h2>
+
+  <input id="nome" type="text" placeholder="Nome completo" style="margin: 5px; padding: 10px;" />
+  <input id="email" type="email" placeholder="E-mail" style="margin: 5px; padding: 10px;" />
+  <input id="senha" type="password" placeholder="Senha" style="margin: 5px; padding: 10px;" />
+  <select id="funcao" style="margin: 5px; padding: 10px;">
+    <option value="Estampador">Estampador</option>
+    <option value="Corte">Corte</option>
+    <option value="Costureira">Costureira</option>
+    <option value="Administrador">Administrador</option>
+  </select>
+
+  <button id="cadastrar" style="margin: 10px; padding: 10px 20px;">Cadastrar</button>
+  <p id="mensagem" style="color: yellow;"></p>
+
+  <a href="login.html" style="color: white;">Já tenho conta</a>
+
+</body>
+</html>

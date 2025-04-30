@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nobre Uniformes - Painel de Controle</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="manifest" href="/manifest.json">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #2c5282;
+            --secondary: #1a202c;
+            --accent: #4299e1;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+        }
+        
+        .logo-icon {
+            display: inline-block;
+            width: 30px;
+            height: 40px;
+            background-color: white;
+            position: relative;
+            margin-right: 10px;
+        }
+        
+        .logo-icon:after {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 5px;
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 10px solid white;
+        }
+        
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                z-index: 50;
+                height: 100vh;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+        }
+        
+        .order-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .input-file {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+        
+        .input-file input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+        }
+        
+        .signature-pad {
+            border: 1px dashed #cbd5e0;
+            border-radius: 0.375rem;
+            cursor: crosshair;
+        }
+        
+        /* Animation for notifications */
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+        
+        .notification {
+            animation: slideIn 0.3s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Login Screen -->
+    <div id="login-screen" class="min-h-screen flex flex-col justify-center items-center bg-blue-600 p-4">
+        <div class="logo flex items-center mb-8">
+            <div class="logo-icon"></div>
+            <span class="text-white text-3xl">Nobre Uniformes</span>
+        </div>
+        
+        <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Acessar o Sistema</h2>
+            
+            <form id="login-form" class="space-y-4">
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">E-mail</label>
+                    <input type="email" id="email" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Senha</label>
+                    <input type="password" id="password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                        <label for="remember-me" class="ml-2 block text-sm text-gray-700">Lembrar-me</label>
+                    </div>
+                    
+                    <div class="text-sm">
+                        <a href="#" onclick="showForgotPassword()" class="font-medium text-blue-600 hover:text-blue-500">Esqueceu sua senha?</a>
+                    </div>
+                </div>
+                
+                <div>
+                    <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Entrar
+                    </button>
+                </div>
+            </form>
+            
+            <div class="mt-6">
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-300"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-white text-gray-500">Novo por aqui?</span>
+                    </div>
+                </div>
+                
+                <div class="mt-6">
+                    <button onclick="showRegister()" class="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Cadastrar-se
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Register Screen -->
+    <div id="register-screen" class="hidden min-h-screen flex flex-col justify-center items-center bg-blue-600 p-4">
+        <div class="logo flex items-center mb-8">
+            <div class="logo-icon"></div>
+            <span class="text-white text-3xl">Nobre Uniformes</span>
+        </div>
+        
+        <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Cadastro de Usuário</h2>
+                <button onclick="showLogin()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+            </div>
+            
+            <form id="register-form" class="space-y-4">
+                <div>
+                    <label for="full-name" class="block text-sm font-medium text-gray-700">Nome Completo</label>
+                    <input type="text" id="full-name" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                
+                <div>
+                    <label for="register-email" class="block text-sm font-medium text-gray-700">E-mail</label>
+                    <input type="email" id="register-email" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                
+                <div>
+                    <label for="register-password" class="block text-sm font-medium text-gray-700">Senha</label>
+                    <input type="password" id="register-password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                
+                <div>
+                    <label for="confirm-password" class="block text-sm font-medium text-gray-700">Confirmar Senha</label>
+                    <input type="password" id="confirm-password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                
+                <div>
+                    <label for="role" class="block text-sm font-medium text-gray-700">Função</label>
+                    <select id="role" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">Selecione uma função</option>
+                        <option value="admin">Administrador</option>
+                        <option value="cutter">Corte</option>
+                        <option value="seamstress">Costureira</option>
+                        <option value="printer">Estampador</option>
+                    </select>
+                </div>
+                
+                <div class="mt-6">
+                    <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Cadastrar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Forgot Password Screen -->
+    <div id="forgot-password-screen" class="hidden min-h-screen flex flex-col justify-center items-center bg-blue-600 p-4">
+        <div class="logo flex items-center mb-8">
+            <div class="logo-icon"></div>
+            <span class="text-white text-3xl">Nobre Uniformes</span>
+        </div>
+        
+        <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Recuperação de Senha</h2>
+                <button onclick="showLogin()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+            </div>
+            
+            <form id="forgot-password-form" class="space-y-4">
+                <p class="text-sm text-gray-600">Digite seu e-mail cadastrado e enviaremos um link para redefinir sua senha.</p>
+                
+                <div>
+                    <label for="recovery-email" class="block text-sm font-medium text-gray-700">E-mail</label>
+                    <input type="email" id="recovery-email" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                
+                <div class="mt-6">
+                    <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Enviar Link de Recuperação
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Main App (hidden initially) -->
+    <div id="app" class="hidden min-h-screen flex flex-col md:flex-row">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar bg-blue-800 text-white w-64 flex-shrink-0">
+            <div class="p-4 flex items-center">
+                <div class="logo flex items-center">
+                    <div class="logo-icon"></div>
+                    <span class="text-white text-xl">Nobre Uniformes</span>
+                </div>
+                <button id="sidebar-toggle" class="md:hidden ml-auto text-white">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <nav class="mt-6">
+                <div id="new-order-nav" class="hidden px-4 py-2 hover:bg-blue-700 cursor-pointer">
+                    <div class="flex items-center">
+                        <i class="fas fa-plus-circle mr-3"></i>
+                        <span>Nova Ordem</span>
+                    </div>
+                </div>
+                
+                <div class="px-4 py-2 hover:bg-blue-700 cursor-pointer" onclick="showDashboard('orders')">
+                    <div class="flex items-center">
+                        <i class="fas fa-list-alt mr-3"></i>
+                        <span>Histórico de Ordens</span>
+                    </div>
+                </div>
+                
+                <div id="pending-confirmations-nav" class="hidden px-4 py-2 hover:bg-blue-700 cursor-pointer" onclick="showDashboard('pending')">
+                    <div class="flex items-center">
+                        <i class="fas fa-check-circle mr-3"></i>
+                        <span>Confirmações Pendentes</span>
+                    </div>
+                </div>
+                
+                <div id="financial-dashboard-nav" class="hidden px-4 py-2 hover:bg-blue-700 cursor-pointer" onclick="showDashboard('financial')">
+                    <div class="flex items-center">
+                        <i class="fas fa-chart-line mr-3"></i>
+                        <span>Dashboard Financeiro</span>
+                    </div>
+                </div>
+                
+                <div id="manage-users-nav" class="hidden px-4 py-2 hover:bg-blue-700 cursor-pointer" onclick="showDashboard('users')">
+                    <div class="flex items-center">
+                        <i class="fas fa-users-cog mr-3"></i>
+                        <span>Gerenciar Usuários</span>
+                    </div>
+                </div>
+                
+                <div class="px-4 py-2 hover:bg-blue-700 cursor-pointer" onclick="showDashboard('profile')">
+                    <div class="flex items-center">
+                        <i class="fas fa-user-circle mr-3"></i>
+                        <span>Meu Perfil</span>
+                    </div>
+                </div>
+                
+                <div class="px-4 py-2 hover:bg-blue-700 cursor-pointer" onclick="logout()">
+                    <div class="flex items-center">
+                        <i class="fas fa-sign-out-alt mr-3"></i>
+                        <span>Sair</span>
+                    </div>
+                </div>
+            </nav>
+            
+            <div class="absolute bottom-0 left-0 right-0 p-4 text-xs text-blue-200">
+                <p>© 2023 Nobre Uniformes</p>
+                <p class="mt-1">v1.0.0</p>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Top Navigation -->
+            <header class="bg-white shadow-sm z-10">
+                <div class="flex items-center justify-between px-4 py-3">
+                    <div class="flex items-center">
+                        <button id="mobile-sidebar-toggle" class="md:hidden text-gray-600 mr-2">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <h1 id="dashboard-title" class="text-lg font-semibold text-gray-800">Dashboard</h1>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <div class="relative">
+                            <button id="notifications-button" class="p-1 text-gray-600 hover:text-gray-800 relative">
+                                <i class="fas fa-bell"></i>
+                                <span id="notification-count" class="hidden absolute top-0 right-0 inline-block w-4 h-4 bg-red-500 text-white text-xs rounded-full">0</span>
+                            </button>
+                            
+                            <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-50">
+                                <div class="px-4 py-2 border-b border-gray-200">
+                                    <p class="text-sm font-medium text-gray-700">Notificações</p>
+                                </div>
+                                <div id="notifications-list" class="max-h-60 overflow-y-auto">
+                                    <!-- Notifications will be added here -->
+                                </div>
+                                <div class="px-4 py-2 border-t border-gray-200 text-center">
+                                    <a href="#" class="text-xs text-blue-600 hover:text-blue-800">Ver todas</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="ml-4 relative">
+                            <button id="user-menu-button" class="flex items-center text-sm focus:outline-none">
+                                <span id="current-user-name" class="hidden md:inline-block mr-2 text-gray-700">Usuário</span>
+                                <img id="current-user-avatar" class="h-8 w-8 rounded-full" src="https://ui-avatars.com/api/?name=U&background=2c5282&color=fff" alt="User avatar">
+                            </button>
+                            
+                            <div id="user-menu-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                                <a href="#" onclick="showDashboard('profile')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Meu Perfil</a>
+                                <a href="#" onclick="logout()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sair</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Dashboard Content -->
+            <main id="dashboard-content" class="flex-1 overflow-y-auto p-4 bg-gray-50">
+                <!-- Content will be loaded here dynamically -->
+                
+                <!-- Orders Dashboard (default view) -->
+                <div id="orders-dashboard">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-semibold text-gray-800">Histórico de Ordens</h2>
+                        <div class="flex space-x-2">
+                            <div class="relative">
+                                <input type="text" id="orders-search" placeholder="Buscar ordens..." class="pl-8 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-search text-gray-400"></i>
+                                </div>
+                            </div>
+                            <select id="orders-filter" class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                <option value="all">Todas</option>
+                                <option value="pending">Pendentes</option>
+                                <option value="in_progress">Em Andamento</option>
+                                <option value="completed">Concluídas</option>
+                                <option value="delivered">Entregues</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Order cards will be added here dynamically -->
+                    </div>
+                    
+                    <div class="mt-6 flex justify-between items-center">
+                        <div class="text-sm text-gray-600">
+                            Mostrando <span id="orders-showing">1-10</span> de <span id="orders-total">25</span> ordens
+                        </div>
+                        <div class="flex space-x-2">
+                            <button id="orders-prev" class="px-3 py-1 border border-gray-300 rounded-md bg-white text-gray-700 disabled:opacity-50">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button id="orders-next" class="px-3 py-1 border border-gray-300 rounded-md bg-white text-gray-700">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- New Order Form -->
+                <div id="new-order-dashboard" class="hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-semibold text-gray-800">Nova Ordem de Serviço</h2>
+                        <button onclick="showDashboard('orders')" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">
+                            <i class="fas fa-arrow-left mr-2"></i> Voltar
+                        </button>
+                    </div>
+                    
+                    <form id="new-order-form" class="space-y-6">
+                        <div class="bg-white shadow rounded-lg p-6">
+                            <h3 class="text-lg font-medium text-gray-800 mb-4">Informações do Cliente</h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="client-name" class="block text-sm font-medium text-gray-700">Nome do Cliente</label>
+                                    <input type="text" id="client-name" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                                
+                                <div>
+                                    <label for="stamp-name" class="block text-sm font-medium text-gray-700">Nome da Estampa</label>
+                                    <input type="text" id="stamp-name" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white shadow rounded-lg p-6">
+                            <h3 class="text-lg font-medium text-gray-800 mb-4">Tamanhos e Quantidades</h3>
+                            
+                            <div class="mb-6">
+                                <h4 class="text-md font-medium text-gray-700 mb-3">Tamanhos Masculinos/Femininos</h4>
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                    <div>
+                                        <label for="size-pp" class="block text-sm font-medium text-gray-700">PP</label>
+                                        <input type="number" id="size-pp" min="0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                    <div>
+                                        <label for="size-p" class="block text-sm font-medium text-gray-700">P</label>
+                                        <input type="number" id="size-p" min="0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                    <div>
+                                        <label for="size-m" class="block text-sm font-medium text-gray-700">M</label>
+                                        <input type="number" id="size-m" min="0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                    <div>
+                                        <label for="size-g" class="block text-sm font-medium text-gray-700">G</label>
+                                        <input type="number" id="size-g" min="0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                    <div>
+                                        <label for="size-gg" class="block text-sm font-medium text-gray-700">GG</label>
+                                        <input type="number" id="size-gg" min="0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                    <div>
+                                        <label for="size-xgg" class="block text-sm font-medium text-gray-700">XGG</label>
+                                        <input type="number" id="size-xgg" min="0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                    <div>
+                                        <label for="size-xxgg" class="block text-sm font-medium text-gray-700">XXGG</label>
+                                        <input type="number" id="size-xxgg" min="0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 class="text-md font-medium text-gray-700 mb-3">Tamanhos Infantis</h4>
+                                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                    <div>
+                                        <label for="size-2" class="block text-sm font-medium text-gray-700">2</label>
+                                        <input type="number" id="size-2" min="0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                    <div>
+                                        <label for="size-4" class="block text-sm font-medium text-gray-700">4</label>
+                                        <input type="number" id="size-4" min="0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                    <div>
+                                        <label for="size-6" class="block text-sm font-medium text-gray-700">6</label>
+                                        <input type="number" id="size-6" min="0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                    <div>
+                                        <label for="size-8" class="block text-sm font-medium text-gray-700">8</label>
+                                        <input type="number" id="size-8" min="0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                    <div>
+                                        <label for="size-10" class="block text-sm font-medium text-gray-700">10</label>
+                                        <input type="number" id="size-10" min="0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                    <div>
+                                        <label for="size-12" class="block text-sm font-medium text-gray-700">12</label>
+                                        <input type="number" id="size-12" min="0" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white shadow rounded-lg p-6">
+                            <h3 class="text-lg font-medium text-gray-800 mb-4">Modelos</h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="model-ragan" name="models" value="Raglan" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                    <label for="model-ragan" class="ml-2 block text-sm text-gray-700">Raglan</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="model-pv" name="models" value="Malha PV" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                    <label for="model-pv" class="ml-2 block text-sm text-gray-700">Malha PV</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="model-cotton" name="models" value="Algodão" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                    <label for="model-cotton" class="ml-2 block text-sm text-gray-700">Algodão</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="model-dryfit" name="models" value="Dry Fit" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                    <label for="model-dryfit" class="ml-2 block text-sm text-gray-700">Dry Fit</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="model-standard" name="models" value="Padrão" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                    <label for="model-standard" class="ml-2 block text-sm text-gray-700">Padrão</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="model-sleeveless" name="models" value="Regata" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                    <label for="model-sleeveless" class="ml-2 block text-sm text-gray-700">Regata</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="model-polo" name="models" value="Camisa Polo" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                    <label for="model-polo" class="ml-2 block text-sm text-gray-700">Camisa Polo</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white shadow rounded-lg p-6">
+                            <h3 class="text-lg font-medium text-gray-800 mb-4">Arte e Anexos</h3>
+                            
+                            <div class="mb-4">
+                                <label for="art-description" class="block text-sm font-medium text-gray-700">Descrição da Arte</label>
+                                <textarea id="art-description" rows="3" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"></textarea>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Upload da Arte</label>
+                                <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                                    <div class="space-y-1 text-center">
+                                        <div class="flex text-sm text-gray-600">
+                                            <label for="file-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
+                                                <span>Carregar um arquivo</span>
+                                                <input id="file-upload" name="file-upload" type="file" class="sr-only">
+                                            </label>
+                                            <p class="pl-1">ou arraste e solte</p>
+                                        </div>
+                                        <p class="text-xs text-gray-500">PNG, JPG, PDF até 10MB</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="financial-fields" class="bg-white shadow rounded-lg p-6">
+                            <h3 class="text-lg font-medium text-gray-800 mb-4">Informações Financeiras</h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div>
+                                    <label for="unit-price" class="block text-sm font-medium text-gray-700">Valor Unitário (R$)</label>
+                                    <input type="number" id="unit-price" min="0" step="0.01" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                                
+                                <div>
+                                    <label for="total-quantity" class="block text-sm font-medium text-gray-700">Quantidade Total</label>
+                                    <input type="number" id="total-quantity" readonly class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-gray-100 rounded-md shadow-sm">
+                                </div>
+                                
+                                <div>
+                                    <label for="total-value" class="block text-sm font-medium text-gray-700">Valor Total (R$)</label>
+                                    <input type="number" id="total-value" readonly class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-gray-100 rounded-md shadow-sm">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white shadow rounded-lg p-6">
+                            <h3 class="text-lg font-medium text-gray-800 mb-4">Datas</h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="entry-date" class="block text-sm font-medium text-gray-700">Data de Entrada</label>
+                                    <input type="date" id="entry-date" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                                
+                                <div>
+                                    <label for="delivery-date" class="block text-sm font-medium text-gray-700">Data Prevista de Entrega</label>
+                                    <input type="date" id="delivery-date" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-end space-x-3">
+                            <button type="button" onclick="showDashboard('orders')" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                Cancelar
+                            </button>
+                            <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                Salvar Ordem
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Order Details -->
+                <div id="order-details-dashboard" class="hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-semibold text-gray-800">Detalhes da Ordem</h2>
+                        <button onclick="showDashboard('orders')" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">
+                            <i class="fas fa-arrow-left mr-2"></i> Voltar
+                        </button>
+                    </div>
+                    
+                    <div class="bg-white shadow rounded-lg overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                            <div class="flex justify-between items-center">
+                                <h3 id="order-details-title" class="text-lg font-medium text-gray-800">Ordem #12345</h3>
+                                <span id="order-status" class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Pendente</span>
+                            </div>
+                        </div>
+                        
+                        <div class="px-6 py-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="text-md font-medium text-gray-700 mb-3">Informações Básicas</h4>
+                                <div class="space-y-2">
+                                    <div>
+                                        <span class="text-sm font-medium text-gray-500">Cliente:</span>
+                                        <p id="order-client" class="text-sm text-gray-800">Cliente Exemplo</p>
+                                    </div>
+                                    <div>
+                                        <span class="text-sm font-medium text-gray-500">Estampa:</span>
+                                        <p id="order-stamp" class="text-sm text-gray-800">Estampa Exemplo</p>
+                                    </div>
+                                    <div>
+                                        <span class="text-sm font-medium text-gray-500">Data de Entrada:</span>
+                                        <p id="order-entry-date" class="text-sm text-gray-800">01/01/2023</p>
+                                    </div>
+                                    <div>
+                                        <span class="text-sm font-medium text-gray-500">Previsão de Entrega:</span>
+                                        <p id="order-delivery-date" class="text-sm text-gray-800">15/01/2023</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 class="text-md font-medium text-gray-700 mb-3">Modelos</h4>
+                                <div id="order-models" class="text-sm text-gray-800">
+                                    <p>Raglan, Malha PV, Algodão</p>
+                                </div>
+                                
+                                <h4 class="text-md font-medium text-gray-700 mt-4 mb-3">Descrição da Arte</h4>
+                                <p id="order-art-description" class="text-sm text-gray-800">Descrição detalhada da arte a ser estampada.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="px-6 py-4 border-t border-gray-200">
+                            <h4 class="text-md font-medium text-gray-700 mb-3">Quantidades por Tamanho</h4>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <div>
+                                    <span class="text-sm font-medium text-gray-500">PP:</span>
+                                    <p id="order-size-pp" class="text-sm text-gray-800">10</p>
+                                </div>
+                                <div>
+                                    <span class="text-sm font-medium text-gray-500">P:</span>
+                                    <p id="order-size-p" class="text-sm text-gray-800">15</p>
+                                </div>
+                                <div>
+                                    <span class="text-sm font-medium text-gray-500">M:</span>
+                                    <p id="order-size-m" class="text-sm text-gray-800">20</p>
+                                </div>
+                                <div>
+                                    <span class="text-sm font-medium text-gray-500">G:</span>
+                                    <p id="order-size-g" class="text-sm text-gray-800">25</p>
+                                </div>
+                                <div>
+                                    <span class="text-sm font-medium text-gray-500">GG:</span>
+                                    <p id="order-size-gg" class="text-sm text-gray-800">10</p>
+                                </div>
+                                <div>
+                                    <span class="text-sm font-medium text-gray-500">XGG:</span>
+                                    <p id="order-size-xgg" class="text-sm text-gray-800">5</p>
+                                </div>
+                                <div>
+                                    <span class="text-sm font-medium text-gray-500">XXGG:</span>
+                                    <p id="order-size-xxgg" class="text-sm text-gray-800">2</p>
+                                </div>
+                                <div>
+                                    <span class="text-sm font-medium text-gray-500">Total:</span>
+                                    <p id="order-total-quantity" class="text-sm text-gray-800">87</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="order-financial-info" class="hidden px-6 py-4 border-t border-gray-200">
+                            <h4 class="text-md font-medium text-gray-700 mb-3">Informações Financeiras</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <span class="text-sm font-medium text-gray-500">Valor Unitário:</span>
+                                    <p id="order-unit-price" class="text-sm text-gray-800">R$ 25,00</p>
+                                </div>
+                                <div>
+                                    <span class="text-sm font-medium text-gray-500">Quantidade Total:</span>
+                                    <p id="order-fin-total-quantity" class="text-sm text-gray-800">87</p>
+                                </div>
+                                <div>
+                                    <span class="text-sm font-medium text-gray-500">Valor Total:</span>
+                                    <p id="order-total-value" class="text-sm text-gray-800">R$ 2.175,00</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="px-6 py-4 border-t border-gray-200">
+                            <h4 class="text-md font-medium text-gray-700 mb-3">Anexos</h4>
+                            <div id="order-attachments" class="flex flex-wrap gap-3">
+                                <div class="border rounded-md p-2">
+                                    <img src="https://via.placeholder.com/150" alt="Arte da estampa" class="w-24 h-24 object-cover">
+                                    <p class="text-xs text-center mt-1">arte.png</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
+                            <h4 class="text-md font-medium text-gray-700 mb-3">Etapas de Produção</h4>
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-3">
+                                            <i class="fas fa-cut text-gray-500"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-700">Corte</p>
+                                            <p id="order-cut-status" class="text-xs text-gray-500">Pendente</p>
+                                        </div>
+                                    </div>
+                                    <button id="confirm-cut-btn" class="hidden px-3 py-1 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                        Confirmar
+                                    </button>
+                                </div>
+                                
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-3">
+                                            <i class="fas fa-tshirt text-gray-500"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-700">Costura</p>
+                                            <p id="order-sew-status" class="text-xs text-gray-500">Pendente</p>
+                                        </div>
+                                    </div>
+                                    <button id="confirm-sew-btn" class="hidden px-3 py-1 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                        Confirmar
+                                    </button>
+                                </div>
+                                
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-3">
+                                            <i class="fas fa-stamp text-gray-500"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-700">Estampa</p>
+                                            <p id="order-print-status" class="text-xs text-gray-500">Pendente</p>
+                                        </div>
+                                    </div>
+                                    <button id="confirm-print-btn" class="hidden px-3 py-1 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                        Confirmar
+                                    </button>
+                                </div>
+                                
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-3">
+                                            <i class="fas fa-truck text-gray-500"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-700">Entrega</p>
+                                            <p id="order-delivery-status" class="text-xs text-gray-500">Pendente</p>
+                                        </div>
+                                    </div>
+                                    <button id="confirm-delivery-btn" class="hidden px-3 py-1 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                        Confirmar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="order-admin-actions" class="hidden px-6 py-4 border-t border-gray-200 bg-gray-50">
+                            <div class="flex justify-end space-x-3">
+                                <button class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                    <i class="fas fa-edit mr-2"></i> Editar
+                                </button>
+                                <button class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                    <i class="fas fa-trash mr-2"></i> Excluir
+                                </button>
+                                <button class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                    <i class="fas fa-print mr-2"></i> Imprimir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pending Confirmations Dashboard -->
+                <div id="pending-dashboard" class="hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-semibold text-gray-800">Confirmações Pendentes</h2>
+                        <button onclick="showDashboard('orders')" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">
+                            <i class="fas fa-arrow-left mr-2"></i> Voltar
+                        </button>
+                    </div>
+                    
+                    <div class="bg-white shadow rounded-lg overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-blue-500 mr-2"></i>
+                                <h3 class="text-lg font-medium text-gray-800">Etapas que precisam de sua confirmação</h3>
+                            </div>
+                        </div>
+                        
+                        <div id="pending-list" class="divide-y divide-gray-200">
+                            <!-- Pending confirmations will be added here dynamically -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Financial Dashboard -->
+                <div id="financial-dashboard" class="hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-semibold text-gray-800">Dashboard Financeiro</h2>
+                        <button onclick="showDashboard('orders')" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">
+                            <i class="fas fa-arrow-left mr-2"></i> Voltar
+                        </button>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <div class="bg-white shadow rounded-lg p-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500">Receita Total</p>
+                                    <p id="total-revenue" class="text-2xl font-semibold text-gray-800">R$ 25.430,00</p>
+                                </div>
+                                <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white shadow rounded-lg p-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500">Ordens Concluídas</p>
+                                    <p id="completed-orders" class="text-2xl font-semibold text-gray-800">87</p>
+                                </div>
+                                <div class="p-3 rounded-full bg-green-100 text-green-600">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white shadow rounded-lg p-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500">Ordens Pendentes</p>
+                                    <p id="pending-orders" class="text-2xl font-semibold text-gray-800">12</p>
+                                </div>
+                                <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white shadow rounded-lg p-6 mb-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-medium text-gray-800">Histórico Financeiro</h3>
+                            <div class="flex space-x-2">
+                                <select id="financial-period" class="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    <option value="this_month">Este Mês</option>
+                                    <option value="last_month">Mês Passado</option>
+                                    <option value="this_quarter">Este Trimestre</option>
+                                    <option value="this_year">Este Ano</option>
+                                    <option value="custom">Personalizado</option>
+                                </select>
+                                <button class="px-3 py-1 border border-gray-300 rounded-md bg-white text-gray-700">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ordem</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cliente</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantidade</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Valor Unitário</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Valor Total</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="financial-table-body" class="bg-white divide-y divide-gray-200">
+                                    <!-- Financial data will be added here dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-white shadow rounded-lg p-6">
+                            <h3 class="text-lg font-medium text-gray-800 mb-4">Receita por Mês</h3>
+                            <div class="h-64">
+                                <!-- Chart placeholder -->
+                                <div class="flex items-center justify-center h-full bg-gray-100 rounded">
+                                    <p class="text-gray-500">Gráfico de Receita</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white shadow rounded-lg p-6">
+                            <h3 class="text-lg font-medium text-gray-800 mb-4">Distribuição por Cliente</h3>
+                            <div class="h-64">
+                                <!-- Chart placeholder -->
+                                <div class="flex items-center justify-center h-full bg-gray-100 rounded">
+                                    <p class="text-gray-500">Gráfico de Clientes</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Users Management Dashboard -->
+                <div id="users-dashboard" class="hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-semibold text-gray-800">Gerenciamento de Usuários</h2>
+                        <div>
+                            <button onclick="showDashboard('orders')" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 mr-2">
+                                <i class="fas fa-arrow-left mr-2"></i> Voltar
+                            </button>
+                            <button onclick="showNewUserForm()" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                <i class="fas fa-plus mr-2"></i> Novo Usuário
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white shadow rounded-lg overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <i class="fas fa-users-cog text-blue-500 mr-2"></i>
+                                    <h3 class="text-lg font-medium text-gray-800">Todos os Usuários</h3>
+                                </div>
+                                <div class="relative">
+                                    <input type="text" id="users-search" placeholder="Buscar usuários..." class="pl-8 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-search text-gray-400"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">E-mail</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Função</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="users-table-body" class="bg-white divide-y divide-gray-200">
+                                    <!-- Users will be added here dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- New User Form -->
+                <div id="new-user-dashboard" class="hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-semibold text-gray-800">Cadastrar Novo Usuário</h2>
+                        <button onclick="showDashboard('users')" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">
+                            <i class="fas fa-arrow-left mr-2"></i> Voltar
+                        </button>
+                    </div>
+                    
+                    <form id="new-user-form" class="space-y-6">
+                        <div class="bg-white shadow rounded-lg p-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="new-user-name" class="block text-sm font-medium text-gray-700">Nome Completo</label>
+                                    <input type="text" id="new-user-name" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                                
+                                <div>
+                                    <label for="new-user-email" class="block text-sm font-medium text-gray-700">E-mail</label>
+                                    <input type="email" id="new-user-email" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                                
+                                <div>
+                                    <label for="new-user-password" class="block text-sm font-medium text-gray-700">Senha</label>
+                                    <input type="password" id="new-user-password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                                
+                                <div>
+                                    <label for="new-user-confirm-password" class="block text-sm font-medium text-gray-700">Confirmar Senha</label>
+                                    <input type="password" id="new-user-confirm-password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                                
+                                <div>
+                                    <label for="new-user-role" class="block text-sm font-medium text-gray-700">Função</label>
+                                    <select id="new-user-role" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                        <option value="">Selecione uma função</option>
+                                        <option value="admin">Administrador</option>
+                                        <option value="cutter">Corte</option>
+                                        <option value="seamstress">Costureira</option>
+                                        <option value="printer">Estampador</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label for="new-user-status" class="block text-sm font-medium text-gray-700">Status</label>
+                                    <select id="new-user-status" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                        <option value="active">Ativo</option>
+                                        <option value="inactive">Inativo</option>
+                                        <option value="pending">Pendente</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-end space-x-3">
+                            <button type="button" onclick="showDashboard('users')" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                Cancelar
+                            </button>
+                            <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                Salvar Usuário
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Profile Dashboard -->
+                <div id="profile-dashboard" class="hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-semibold text-gray-800">Meu Perfil</h2>
+                        <button onclick="showDashboard('orders')" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">
+                            <i class="fas fa-arrow-left mr-2"></i> Voltar
+                        </button>
+                    </div>
+                    
+                    <div class="bg-white shadow rounded-lg overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                            <div class="flex items-center">
+                                <i class="fas fa-user-circle text-blue-500 mr-2"></i>
+                                <h3 class="text-lg font-medium text-gray-800">Informações Pessoais</h3>
+                            </div>
+                        </div>
+                        
+                        <div class="px-6 py-4 grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="md:col-span-1 flex flex-col items-center">
+                                <div class="relative mb-4">
+                                    <img id="profile-avatar" class="h-32 w-32 rounded-full" src="https://ui-avatars.com/api/?name=U&background=2c5282&color=fff" alt="User avatar">
+                                    <button class="absolute bottom-0 right-0 bg-blue-600 text-white rounded-full p-2 hover:bg-blue-700">
+                                        <i class="fas fa-camera"></i>
+                                    </button>
+                                </div>
+                                <input type="file" id="profile-avatar-upload" class="hidden" accept="image/*">
+                                <h4 id="profile-name" class="text-lg font-medium text-gray-800">Usuário Exemplo</h4>
+                                <p id="profile-role" class="text-sm text-gray-500">Administrador</p>
+                            </div>
+                            
+                            <div class="md:col-span-2">
+                                <form id="profile-form" class="space-y-4">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label for="profile-full-name" class="block text-sm font-medium text-gray-700">Nome Completo</label>
+                                            <input type="text" id="profile-full-name" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                        </div>
+                                        
+                                        <div>
+                                            <label for="profile-email" class="block text-sm font-medium text-gray-700">E-mail</label>
+                                            <input type="email" id="profile-email" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <label for="profile-current-password" class="block text-sm font-medium text-gray-700">Senha Atual</label>
+                                        <input type="password" id="profile-current-password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                    
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label for="profile-new-password" class="block text-sm font-medium text-gray-700">Nova Senha</label>
+                                            <input type="password" id="profile-new-password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                        </div>
+                                        
+                                        <div>
+                                            <label for="profile-confirm-password" class="block text-sm font-medium text-gray-700">Confirmar Nova Senha</label>
+                                            <input type="password" id="profile-confirm-password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="pt-4">
+                                        <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                            Salvar Alterações
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <!-- Signature Modal -->
+    <div id="signature-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-medium text-gray-800">Confirmar Etapa</h3>
+                <button onclick="hideSignatureModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <p class="text-sm text-gray-600 mb-4">Por favor, confirme que você concluiu esta etapa de produção:</p>
+            
+            <div class="mb-4">
+                <p id="signature-step" class="font-medium text-gray-800">Corte</p>
+                <p id="signature-order" class="text-sm text-gray-600">Ordem #12345 - Cliente Exemplo</p>
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Assinatura:</label>
+                <canvas id="signature-pad" class="signature-pad w-full h-32"></canvas>
+                <button onclick="clearSignature()" class="mt-2 text-sm text-blue-600 hover:text-blue-800">Limpar</button>
+            </div>
+            
+            <div class="flex justify-end space-x-3">
+                <button onclick="hideSignatureModal()" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Cancelar
+                </button>
+                <button onclick
+</html>
