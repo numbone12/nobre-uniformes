@@ -28,4 +28,3 @@ if (btn) {
 } else {
   console.error("❌ Botão #entrar não encontrado");
 }
-console.log
