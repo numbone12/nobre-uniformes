@@ -17,9 +17,18 @@ if (btn) {
 
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, senha);
-      console.log("✅ Login realizado com:", userCredential);
-      alert("Login realizado com sucesso!");
-      window.location.href = "painel.html";
+      const user = userCredential.user;
+
+      if (user.emailVerified) {
+        console.log("✅ Email verificado, login autorizado");
+        alert("Login realizado com sucesso!");
+        window.location.href = "painel.html";
+      } else {
+        console.warn("⚠️ Email não verificado");
+        await user.sendEmailVerification();
+        alert("⚠️ Seu e-mail ainda não foi verificado. Enviamos novamente o link.");
+      }
+
     } catch (error) {
       console.error("🚨 Erro no login:", error.code, error.message);
       document.getElementById("erro").innerText = "Erro: " + error.message;
